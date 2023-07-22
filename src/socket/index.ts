@@ -7,4 +7,4 @@ const options = {
   reconnectionAttempts: Infinity,
 };
 
-export const socket = io("https://localhost:3001", options);
+export const socket = io("ws://localhost:3001", options);

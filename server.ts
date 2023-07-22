@@ -1,8 +1,10 @@
-import { ACTIONS } from "./src/socket/actions";
-
+import path from "path";
 import http from "http";
 import express from "express";
 import { Server } from "socket.io";
+import { version, validate } from "uuid";
+
+import { ACTIONS } from "./src/socket/actions";
 
 const app = express();
 const server = http.createServer(app);
@@ -12,7 +14,10 @@ const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3001;
 
 function getClientsRooms() {
   const { rooms } = io.sockets.adapter;
-  return Array.from(rooms.keys());
+
+  return Array.from(rooms.keys()).filter(
+    (roomID) => validate(roomID) && version(roomID) === 4
+  );
 }
 
 function shareRoomsInfo() {
@@ -50,7 +55,27 @@ io.on("connection", (socket) => {
     shareRoomsInfo();
   });
 
-  function leaveRoom() {}
+  function leaveRoom() {
+    const { rooms } = socket;
+
+    Array.from(rooms).forEach((roomID) => {
+      const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
+
+      clients.forEach((clientID) => {
+        io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
+          peerID: socket.id,
+        });
+
+        socket.emit(ACTIONS.REMOVE_PEER, {
+          peerID: clientID,
+        });
+      });
+
+      socket.leave(roomID);
+    });
+
+    shareRoomsInfo();
+  }
 
   socket.on(ACTIONS.LEAVE, leaveRoom);
   socket.on("disconnecting", leaveRoom);
