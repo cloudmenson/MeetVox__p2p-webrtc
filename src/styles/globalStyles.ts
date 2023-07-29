@@ -8,9 +8,28 @@ export const GlobalStyles = createGlobalStyle`
   }
   
   body {
+    font-family: Montserrat, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 15px;
+
     ${({ theme }) => css`
-      color: ${theme.colors.black};
-      background: ${theme.colors.white};
+      color: ${theme.colors.white};
+      background: ${theme.colors.black};
     `}
+  }
+
+  a {
+    text-decoration: none;
+    color: ${({ theme }) => theme.colors.white};
+    cursor: pointer;
+  }
+
+  button {
+    background: none;
+    color: ${({ theme }) => theme.colors.white};
+    border: none;
+    text-transform: uppercase;
+    cursor: pointer
   }
 `;

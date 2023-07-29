@@ -1,18 +1,20 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { ThemeWrap } from "src/context";
-import { HomePage, NotFound404, Room } from "src/pages";
+import { CursorCircle } from "src/components";
 import { GlobalStyles } from "src/styles/globalStyles";
+import { HomePage, NotFound404, Room } from "src/pages";
 
 const App = () => {
   return (
     <ThemeWrap>
       <GlobalStyles />
+      <CursorCircle />
       <Router>
         <Routes>
-          <Route path="*" element={<NotFound404 />} />
-          <Route path="/" element={<HomePage />} />
           <Route path="/room/:id" element={<Room />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="*" element={<NotFound404 />} />
         </Routes>
       </Router>
     </ThemeWrap>

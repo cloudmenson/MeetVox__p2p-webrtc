@@ -1,5 +1,6 @@
 import path from "path";
 import http from "http";
+import cors from "cors";
 import express from "express";
 import { Server } from "socket.io";
 import { version, validate } from "uuid";
@@ -11,6 +12,8 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3001;
+
+app.use(cors());
 
 function getClientsRooms() {
   const { rooms } = io.sockets.adapter;
@@ -79,6 +82,20 @@ io.on("connection", (socket) => {
 
   socket.on(ACTIONS.LEAVE, leaveRoom);
   socket.on("disconnecting", leaveRoom);
+
+  socket.on(ACTIONS.RELAY_SDP, ({ peerID, sessionDescription }) => {
+    io.to(peerID).emit(ACTIONS.SESSION_DESCRIPTION, {
+      peerID: socket.id,
+      sessionDescription,
+    });
+  });
+
+  socket.on(ACTIONS.RELAY_ICE, ({ peerID, iceCandidate }) => {
+    io.to(peerID).emit(ACTIONS.ICE_CANDIDATE, {
+      peerID: socket.id,
+      iceCandidate,
+    });
+  });
 });
 
 server.listen(PORT, () => {

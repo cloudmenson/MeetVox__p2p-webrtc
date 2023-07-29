@@ -1,1 +1,1 @@
-export { ReactComponent as Rec } from "../assets/svg/rec.svg";
+export { default as Rec } from "../assets/img/rec.png";

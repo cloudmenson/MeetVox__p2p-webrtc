@@ -2,7 +2,7 @@
 const white = "#ffffff";
 
 //black
-const black = "#000000";
+const black = "#1C1C1C";
 
 
 const COLORS = Object.freeze({

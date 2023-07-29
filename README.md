@@ -1,4 +1,4 @@
-# Zoomify__p2p-webrtc
+# MeetVox__p2p-webrtc
 
 `Technologies used:`
 - React
